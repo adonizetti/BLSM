@@ -5,15 +5,10 @@
 \alias{BLSM}
 \alias{BLSM-package}
 \title{Bayesian Latent Space Model}
-\description{
-BLSM
-}
 \details{
-Add some info
+R package allowing the computation of a Bayesian Latent Space Model for Complex Networks.
+Given a network characterized by its adjacency and ... TBD
 }
 \references{
-AAAA
-}
-\author{
-Alberto Donizetti <albe.donizetti@gmail.com>
+TBD
 }

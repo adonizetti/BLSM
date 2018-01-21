@@ -1,4 +1,4 @@
-proc.crr=function(Z,Z0){
+proc_crr=function(Z,Z0){
   #' @title Procrustean corresponding positions
   #' @description Given a set of starting coordinates, the function returns the Procrustean Transform of the initial points that minimizes 
   #' the sum of squared positional difference from a set of reference coordinates. The (Euclidean) distances between a candidate 
@@ -36,7 +36,7 @@ estimate_latent_positions = function (Y,W,
                                       k=2,
                                       alpha=2,
                                       nscan=8*10^5, burn_in=5*10^5, odens=10^3,
-                                      zdelta=10, z_norm_prior_mu=0, z_norm_prior_sd=10,
+                                      zdelta=1, z_norm_prior_mu=0, z_norm_prior_sd=10,
                                       adelta=.3, a_exp_prior_a=1, a_exp_prior_b=1,
                                       dynamic_plot = FALSE, dynamic_circles = FALSE,
                                       ...){
@@ -44,9 +44,9 @@ estimate_latent_positions = function (Y,W,
   #' @description Run a simulation to obtain the positions of the network nodes in the latent space for each sampled iteration
   #' 
   #' @param Y Adjacency matrix of the network
-  #' @param W Weight matrix of the network
+  #' @param W (Optional) Weight matrix of the network
   #' @param k Space dimensionality
-  #' @param procrustean Boolean to include/exclude (TRUE/FALSE) the Procrustean Transform step in the algorithm. Set TRUE by default.
+  #' @param procrustean Boolean to include/exclude (\code{TRUE/FALSE}) the Procrustean Transform step in the algorithm. Set \code{TRUE} by default.
   #' @param alpha Starting value of the \code{alpha} parameter
   #' @param nscan Number of iterations
   #' @param burn_in Burn-in value (starting iterations to be discared)
@@ -63,23 +63,39 @@ estimate_latent_positions = function (Y,W,
   #' 
   #' @return Returns a "BLSM object" (\code{blsm_obj}), i.e. a list containing:
   #' \itemize{
-  #' \item \code{Alpha} {\code{alpha} values from the sampled iterations}
-  #' \item \code{Likelihood}{Log-likelihood values from the sampled iterations}
-  #' \item \code{Iterations}{Latent space coordinates from the sampled iterations. Latent positions are stored in a
+  #' \item \code{Alpha }{\code{alpha} values from the sampled iterations}
+  #' \item \code{Likelihood }{Log-likelihood values from the sampled iterations}
+  #' \item \code{Iterations }{Latent space coordinates from the sampled iterations. Latent positions are stored in a
   #' 3D array whose dimensions are given by (1: number of nodes, 2: space dimensionality, 3: number of iterations).
   #' In the non-Procrustean framework the latent distances are given instead of the positions: another 3D array is returned, whose dimensions
   #' are given by (1: number of nodes, 2: number of nodes, 3: number of iterations). The command needed in order to get the average values over the iterations for
   #' either the positions or the distances is \code{rowMeans(blsm_obj$Iterations, dims=2)}.}
-  #' \item \code{StartingPositions}{Latent space coordinates right after the initialization step. In the non-Procrustean framework starting distances are given instead.}
-  #' \item \code{Matrix}{Original matrices of the network (adjacency and weights)}
-  #' \item \code{Parameters}{List of parameters specified during the call to \link[BLSM]{estimate_latent_positions}}
+  #' \item \code{StartingPositions }{Latent space coordinates right after the initialization step. In the non-Procrustean framework starting distances are given instead.}
+  #' \item \code{Matrix }{Original matrices of the network (adjacency and weights)}
+  #' \item \code{Parameters }{List of parameters specified during the call to \link[BLSM]{estimate_latent_positions}}
   #' }
   #' 
+  #' @examples 
+  #'\dontrun{
+  #'  estimate_latent_positions(example_adjacency_matrix,  
+  #'                            burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+  #'                          
+  #'  estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, 
+  #'                           nscan = 10^5, dynamic_plot = TRUE)
+  #'}
   #' @export
   
-  if (k==3 & dynamic_plot){
-    require(rgl)
+  if (missing(W)) {
+    W=Y*0+1
   }
+  
+  if (k==3 & dynamic_plot){
+    if (!requireNamespace("rgl", quietly = TRUE)) {
+      message("rgl package needed for the 3D plot. Please install it or set dynamic_plot=FALSE.")
+      return(NULL)      
+    }
+  }
+  
   params = list(procrustean=procrustean, 
                 k=k,
                 alpha=alpha,
@@ -89,7 +105,6 @@ estimate_latent_positions = function (Y,W,
   
   nscan = nscan + burn_in
   it_cont = 1
-  escape_flag=FALSE
   create_window_flag=dynamic_plot
   
   rem = which(rowMeans(Y)==0)
@@ -139,16 +154,13 @@ estimate_latent_positions = function (Y,W,
         Z[,1] = Z[,1]-mean(Z[,1])
         Z[,2] = Z[,2]-mean(Z[,2])
         tryCatch({
-          Z = proc.crr(tmp,Z_Proc)
+          Z = proc_crr(tmp,Z_Proc)
         }, error = function(e) {
-          escape_flag<<-TRUE
           message("The matrix used to compute the Procrustean transformation is singular. \nIf changing the parameters doesn't solve the issue, please try to lower the space dimensionality.")
+          return(blsm_obj)
           graphics.off()
         }
         )
-      }
-      if (escape_flag){
-        return(blsm_obj)
       }
       lpz = lpz_dist(Z)
       tmp = alpha_up(Y,lpz,W,alpha,adelta,a_exp_prior_a,a_exp_prior_b)
@@ -273,7 +285,7 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
   #' @description Plot latent positions from a Procrustean simulation
   #' 
   #' @param blsm_obj Blsm object obtained through \link[BLSM]{estimate_latent_positions}
-  #' @param colors Colors of the simulated coordinate points in the latent space
+  #' @param colors (Optional) Colors of the simulated coordinate points in the latent space. Internal default colors are used if the argument is missing. 
   #' @param points_size Size of the coordinate points
   #' @param labels_point_size Size of the label points
   #' @param labels_point_color Color of the label points
@@ -310,6 +322,10 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
       if (circles_2D){symbols(avg_Z_est, circles = rep(mean(Alpha),n), add=TRUE, fg = colors, inches=F)}
       dev.flush()
     } else if (dim(blsm_obj$Iterations)[2]==3){
+      if (!requireNamespace("rgl", quietly = TRUE)) {
+        message("rgl package needed for the 3D plot. Please install it.")
+        return(NULL)      
+      }
       par(mfrow=c(1,1))
       par(mar=c(3,3,1,1))
       par(mgp=c(2,1,0))

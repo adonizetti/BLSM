@@ -1,12 +1,13 @@
-#' BLSM
-#' 
-#' @details Add some info
+#' @name BLSM
 #' @title Bayesian Latent Space Model
 #' @docType package
-#' @author Alberto Donizetti <albe.donizetti@gmail.com>
-#' @import Rcpp RcppEigen MVA MASS GMD igraph
+#' 
+#' @details R package allowing the computation of a Bayesian Latent Space Model for Complex Networks.
+#' Given a network characterized by its adjacency and ... TBD
+#' 
+#' @import Rcpp RcppEigen 
 #' @importFrom Rcpp evalCpp
 #' @useDynLib BLSM
-#' @name BLSM
-#' @references AAAA
+#' @references TBD
+
 NULL

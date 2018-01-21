@@ -1,12 +1,13 @@
 Package: BLSM
-Type: Package
 Title: Bayesian Latent Space Model
-Version: 1.0
+Version: 0.1.0
 Date: 2017-06-11
-Author: Alberto Donizetti
-Maintainer: Alberto Donizetti <albe.donizetti@gmail.com>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
-Imports: Rcpp (>= 0.12.4), RcppEigen (>= 0.3.2.8.1), MVA (>= 1.0), MASS(>= 7.3), GMD (>= 0.3.3), igraph (>= 1.0.1)
+Authors@R: person("Alberto", "Donizetti", email = "albe.donizetti@gmail.com", role = c("aut", "cre"))
+Description: TBD
+Depends: R (>= 3.4.0)
+Imports: Rcpp (>= 0.12.4), RcppEigen (>= 0.3.2.8.1)
+Suggests: rgl (>= 0.98.1)
 LinkingTo: Rcpp, RcppEigen
+License: MIT
+LazyData: true
 RoxygenNote: 6.0.1

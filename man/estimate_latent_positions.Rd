@@ -5,7 +5,7 @@
 \title{Core BLSM simulation}
 \usage{
 estimate_latent_positions(Y, W, procrustean = TRUE, k = 2, alpha = 2,
-  nscan = 8 * 10^5, burn_in = 5 * 10^5, odens = 10^3, zdelta = 10,
+  nscan = 8 * 10^5, burn_in = 5 * 10^5, odens = 10^3, zdelta = 1,
   z_norm_prior_mu = 0, z_norm_prior_sd = 10, adelta = 0.3,
   a_exp_prior_a = 1, a_exp_prior_b = 1, dynamic_plot = FALSE,
   dynamic_circles = FALSE, ...)
@@ -13,9 +13,9 @@ estimate_latent_positions(Y, W, procrustean = TRUE, k = 2, alpha = 2,
 \arguments{
 \item{Y}{Adjacency matrix of the network}
 
-\item{W}{Weight matrix of the network}
+\item{W}{(Optional) Weight matrix of the network}
 
-\item{procrustean}{Boolean to include/exclude (TRUE/FALSE) the Procrustean Transform step in the algorithm. Set TRUE by default.}
+\item{procrustean}{Boolean to include/exclude (\code{TRUE/FALSE}) the Procrustean Transform step in the algorithm. Set \code{TRUE} by default.}
 
 \item{k}{Space dimensionality}
 
@@ -48,18 +48,27 @@ estimate_latent_positions(Y, W, procrustean = TRUE, k = 2, alpha = 2,
 \value{
 Returns a "BLSM object" (\code{blsm_obj}), i.e. a list containing:
 \itemize{
-\item \code{Alpha} {\code{alpha} values from the sampled iterations}
-\item \code{Likelihood}{Log-likelihood values from the sampled iterations}
-\item \code{Iterations}{Latent space coordinates from the sampled iterations. Latent positions are stored in a
+\item \code{Alpha }{\code{alpha} values from the sampled iterations}
+\item \code{Likelihood }{Log-likelihood values from the sampled iterations}
+\item \code{Iterations }{Latent space coordinates from the sampled iterations. Latent positions are stored in a
 3D array whose dimensions are given by (1: number of nodes, 2: space dimensionality, 3: number of iterations).
 In the non-Procrustean framework the latent distances are given instead of the positions: another 3D array is returned, whose dimensions
 are given by (1: number of nodes, 2: number of nodes, 3: number of iterations). The command needed in order to get the average values over the iterations for
 either the positions or the distances is \code{rowMeans(blsm_obj$Iterations, dims=2)}.}
-\item \code{StartingPositions}{Latent space coordinates right after the initialization step. In the non-Procrustean framework starting distances are given instead.}
-\item \code{Matrix}{Original matrices of the network (adjacency and weights)}
-\item \code{Parameters}{List of parameters specified during the call to \code{estimate_latent_positions}}
+\item \code{StartingPositions }{Latent space coordinates right after the initialization step. In the non-Procrustean framework starting distances are given instead.}
+\item \code{Matrix }{Original matrices of the network (adjacency and weights)}
+\item \code{Parameters }{List of parameters specified during the call to \link[BLSM]{estimate_latent_positions}}
 }
 }
 \description{
 Run a simulation to obtain the positions of the network nodes in the latent space for each sampled iteration
+}
+\examples{
+\dontrun{
+ estimate_latent_positions(example_adjacency_matrix,  
+                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+                         
+ estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, 
+                          nscan = 10^5, dynamic_plot = TRUE)
+}
 }

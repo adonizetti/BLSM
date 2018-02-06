@@ -5,8 +5,16 @@
 
 // [[Rcpp::export]]
 Eigen::MatrixXd dst(const Eigen::Map<Eigen::MatrixXd> M){
+  //'@title Geodesic distance
+  //'@description Evaluate geodesic distance (shortest path) between all pairs of nodes in the network.
+  //'
+  //'@param M Input adjacency matrix
+  //'
+  //'@return Matrix containing all the pairwise geodesic distances
+  //'@export
+
   int g=M.rows();
-  Eigen::MatrixXd Yr=M;
+  Eigen::MatrixXd  Yr=M;
   Eigen::MatrixXd Dst=M;
   for (int i(0); i<g;i++){
     for (int j(0); j<g;j++){
@@ -34,6 +42,14 @@ Eigen::MatrixXd dst(const Eigen::Map<Eigen::MatrixXd> M){
 
 // [[Rcpp::export]] 
 Eigen::MatrixXd lpz_dist(Eigen::MatrixXd Z){
+  //'@title Distance between latent positions
+  //'@description Compute the square root of the Euclidean distances between latent positions and 
+  //'return them with a negative sign.
+  //'
+  //'@param Z Latent positions matrix
+  //'@return Matrix containing the negative square root of the Euclidean distances between latent positions
+  //'@export
+
   Eigen::MatrixXd ZtZ=Z*(Z.adjoint());
   int k=Z.rows();
   Eigen::MatrixXd temp;
@@ -51,6 +67,19 @@ Eigen::MatrixXd lpz_dist(Eigen::MatrixXd Z){
 
 // [[Rcpp::export]] 
 double lpY (Eigen::MatrixXd Y, Eigen::MatrixXd lpz, double alpha, Eigen::MatrixXd W){
+  //' @title Network log-likelihood
+  //' @description Compute the log-likelihood of the whole observed network based on the
+  //' latent positions estimates and the model assumptions. See \link[BLSM]{BLSM} for more information. 
+  //' 
+  //' @param Y Adjacency matrix of the observed network
+  //' @param lpz Matrix containing the negative square root of the Euclidean distances between latent positions 
+  //' (could be the output of \link[BLSM]{lpz_dist})
+  //' @param alpha Model variable \code{alpha}
+  //' @param Weights matrix of the observed network
+  //' 
+  //' @return Log-likelihood of the observed network
+  //' @export
+
   double val(0);
   double lpg;
   int k=lpz.rows();
@@ -68,6 +97,17 @@ double lpY (Eigen::MatrixXd Y, Eigen::MatrixXd lpz, double alpha, Eigen::MatrixX
 
 // [[Rcpp::export]] 
 double mlpY (Eigen::VectorXd avZ, Eigen::MatrixXd Y, Eigen::MatrixXd W){
+  //' @title Network (positive) log-likelihood 
+  //' @description Compute the (positive) log-likelihood of the whole observed network based on the
+  //' latent positions estimates and the model assumptions. The inputs are slighlty different from those of \link[BLSM]{lpY},
+  //' so the function basically applies some preprocessing before calling \link[BLSM]{lpY} and returning its value with the opposite sign. 
+  //' 
+  //' @param avZ Vector containing the \code{Alpha} value and the latent positions 
+  //' @param Y Adjacency matrix of the observed network
+  //' @param Weights matrix of the observed network
+  //' 
+  //' @return Log-likelihood of the observed network
+  
   int k=Y.rows();
   double val(0);
   double alpha=avZ(0);
@@ -75,21 +115,21 @@ double mlpY (Eigen::VectorXd avZ, Eigen::MatrixXd Y, Eigen::MatrixXd W){
   Eigen::MatrixXd Z=avZ.tail(avZ.size()-1);
   Z.resize(k,2);
   Eigen::MatrixXd lpz=lpz_dist(Z);
-  double lpg;
-
-  for (int i(0);i<k;i++){
-    for (int j(0);j<k;j++){
-      lpg=W(i,j)*lpz(i,j)+alpha;
-      if (i!=j){
-        val+=Y(i,j)*lpg-log(1+exp(lpg));
-      }
-    }
-  }
+  
+  val = lpY (Y, lpz, alpha, W)
   return -val;
 }
 
 // [[Rcpp::export]] 
 Eigen::VectorXd lpz_distNODE(Eigen::MatrixXd Z, int node, Eigen::VectorXd diag){
+  //' @title lpz_dist optimized for individual updates
+  //' @description Compute the square root of the Euclidean distances between a specific coordinate in the latent space
+  //' and all the others. The function follows almost the same approach as \link[BLSM]{lpz_dist}, but it is
+  //' more suitable for the individual updates occurring during the simulation.
+  //' 
+  //' @param Z Latent positions matrix
+  //' @param node Specific node in the network corresponding to the latent coordinate which will be used as reference
+  //' @return Vector containing the negative square root of the Euclidean distances between latent positions
   int k=Z.rows();
   Eigen::VectorXd ZtZ=Z.row(node)*(Z.adjoint());
   Eigen::VectorXd temp(k);
@@ -104,6 +144,19 @@ Eigen::VectorXd lpz_distNODE(Eigen::MatrixXd Z, int node, Eigen::VectorXd diag){
 
 // [[Rcpp::export]] 
 double lpYNODE (Eigen::MatrixXd Y, Eigen::MatrixXd Z, double alpha, int node, Eigen::VectorXd diag, Eigen::MatrixXd W){
+  //' @title Network log-likelihood for individual updates
+  //' @description Compute the log-likelihood of the whole observed network based on the
+  //' latent positions estimates and the model assumptions. The function follows almost the same approach as \link[BLSM]{lpY}, but it is
+  //' more suitable for the individual updates occurring during the simulation.
+  //' @param Y Adjacency matrix of the observed network
+  //' @param Z Latent positions matrix
+  //' @param alpha Model variable \code{alpha}
+  //' @param node Specific node in the network corresponding to the latent coordinate which will be used as reference
+  //' @param diag Diagonal from \code[t(Z)%*%Z matrix], passed to speed up the process
+  //' @param Weights matrix of the observed network
+  //' 
+  //' @return Log-likelihood of the observed network
+  //'
   int k=Z.rows();
   double val(0);
   Eigen::VectorXd lpz=lpz_distNODE(Z, node, diag);

@@ -20,7 +20,7 @@ proc_crr=function(Z,Z0){
   t(t(Z0)%*%Z%*%solve(Ahalf)%*%t(Z))  
 }
 
-gg_colors = function(n) {
+blsm_colors = function(n) {
   #' @title Color palette definition
   #' @description  Color palette definition
   #' @param n number of colors
@@ -41,7 +41,7 @@ estimate_latent_positions = function (Y,W,
                                       dynamic_plot = FALSE, dynamic_circles = FALSE,
                                       ...){
   #' @title Core BLSM simulation
-  #' @description Run a simulation to obtain the positions of the network nodes in the latent space for each sampled iteration
+  #' @description Run a simulation to obtain the positions of the network nodes in the latent space for each sampled iteration.
   #' 
   #' @param Y Adjacency matrix of the network
   #' @param W (Optional) Weight matrix of the network
@@ -113,7 +113,7 @@ estimate_latent_positions = function (Y,W,
     W=W[-rem,-rem]
   }
   n=dim(Y)[1]   
-  my_colors=gg_colors(n)
+  my_colors=blsm_colors(n)
   cc=(Y>0)+0
   D=dst(cc)
   Z=cmdscale(D, k)
@@ -256,7 +256,7 @@ estimate_latent_positions = function (Y,W,
 
 plot_traceplots_acf = function (blsm_obj, chosen_node=1,  coordinate=1, chosen_pair=c(1,2)){
   #' @title BLSM traceplots and ACF
-  #' @description Traceplots and autocorrelation functions for the \code{alpha} parameter and a selected node (or pair of nodes in the non-Procrustean framework)
+  #' @description Traceplots and autocorrelation functions for the \code{alpha} parameter and a selected node (or pair of nodes in the non-Procrustean framework).
   #' 
   #' @param blsm_obj Blsm object obtained through \link[BLSM]{estimate_latent_positions}
   #' @param chosen_node Specified node for traceplot and autocorrelation function (Procrustean framework)
@@ -282,7 +282,7 @@ plot_traceplots_acf = function (blsm_obj, chosen_node=1,  coordinate=1, chosen_p
 plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point_size=5, labels_point_color="yellow", 
                                  labels_text_size=1, labels_text_color="blue", circles_2D = FALSE){
   #' @title Base BLSM plot function
-  #' @description Plot latent positions from a Procrustean simulation
+  #' @description Plot latent positions from a Procrustean simulation.
   #' 
   #' @param blsm_obj Blsm object obtained through \link[BLSM]{estimate_latent_positions}
   #' @param colors (Optional) Colors of the simulated coordinate points in the latent space. Internal default colors are used if the argument is missing. 
@@ -297,7 +297,7 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
   
   n=dim(blsm_obj$Iterations)[1]
   if (missing(colors)) {
-    colors=gg_colors(n)
+    colors=blsm_colors(n)
   }
   
   if (blsm_obj$Parameters$procrustean==TRUE){

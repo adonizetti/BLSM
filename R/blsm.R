@@ -91,6 +91,7 @@ estimate_latent_positions = function (Y,W,
   #'  # Procrustean version followed by clustering
   #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
   #'                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+  #'                           
   #'  avg_latent_positions = rowMeans(blsm_obj$Iterations, dims=2)                   
   #'  h_cl = hclust(dist(avg_latent_positions), method="complete")
   #'  n=3
@@ -367,7 +368,7 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
       points(avg_Z_est[,1],avg_Z_est[,2],xaxt="n",yaxt="n",xlab="",ylab="", col=labels_point_color,pch=20,cex=labels_point_size)
       text(avg_Z_est[,1],avg_Z_est[,2],labels(blsm_obj$Matrix$Adjacency)[[1]],col=labels_text_color,cex=labels_text_size)
       
-      if (circles_2D){symbols(avg_Z_est, circles = rep(mean(Alpha),n), add=TRUE, fg = colors, inches=F)}
+      if (circles_2D){symbols(avg_Z_est, circles = rep(mean(blsm_obj$Alpha),n), add=TRUE, fg = colors, inches=F)}
       dev.flush()
     } else if (dim(blsm_obj$Iterations)[2]==3){
       if (!requireNamespace("rgl", quietly = TRUE)) {

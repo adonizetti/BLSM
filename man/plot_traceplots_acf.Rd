@@ -17,5 +17,22 @@ plot_traceplots_acf(blsm_obj, chosen_node = 1, coordinate = 1,
 \item{chosen_pair}{Specified pair of nodes for traceplot and autocorrelation function (non-Procrustean framework)}
 }
 \description{
-Traceplots and autocorrelation functions for the \code{alpha} parameter and a selected node (or pair of nodes in the non-Procrustean framework)
+Traceplots and autocorrelation functions for the \eqn{\alpha} variable and a selected node (or pair of nodes in the non-Procrustean framework).
+}
+\examples{
+\dontrun{
+ # Run the simulation with Procrustean step
+ blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
+                          burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+ 
+ # Plot 
+ plot_traceplots_acf(blsm_obj, chosen_node=3, coordinate=1)
+ 
+ # Run the simulation without Procrustean step
+ blsm_obj = estimate_latent_positions(example_adjacency_matrix, procrustean = FALSE, 
+                          burn_in = 3*10^4, nscan = 10^5)
+ 
+ # Plot 
+ plot_traceplots_acf(blsm_obj, chosen_pair=c(2,5))
+}
 }

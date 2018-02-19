@@ -1,17 +1,33 @@
+blsm_colors = function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
+
 proc_crr=function(Z,Z0){
   #' @title Procrustean corresponding positions
   #' @description Given a set of starting coordinates, the function returns the Procrustean Transform of the initial points that minimizes 
   #' the sum of squared positional difference from a set of reference coordinates. The (Euclidean) distances between a candidate 
   #' configuration and the reference are evaluated by considering the couples of corresponding points. 
   #' 
+  #' The reference configuration must be centered at the origin. 
+  #' 
   #' @param Z set of initial coordinates to be transformed
-  #' @param Z0 set of reference coordinates
+  #' @param Z0 set of reference coordinates centered at the origin
   #' 
   #' @return Set of coordinates minimizing the distance between the initial configuration and the reference one
-  #' 
+  #' @examples pos_ref = matrix(runif(20), ncol=2)
+  #' \dontrun{
+  #' pos_ref = t(t(pos_ref)-colMeans(pos_ref))
+  #' pos = pos_ref + matrix(rnorm(20, mean=1, sd=0.1), ncol=2)
+  #' proc_pos = proc_crr(pos, pos_ref)
+  #' plot(pos_ref, col="blue", pch=20, xlim=c(-1,3), ylim=c(-1,3))
+  #' points(pos, col="red", pch=20)
+  #' points(proc_pos, col="purple", pch=20)
+  #' }
   #' @export
   
-  Z=t(t(Z)-colMeans(Z)+colMeans(Z0))
+  Z=t(t(Z)-colMeans(Z))
   
   A=t(Z)%*%(Z0%*%t(Z0))%*%Z
   eA=eigen(A,symmetric=T)
@@ -20,16 +36,6 @@ proc_crr=function(Z,Z0){
   t(t(Z0)%*%Z%*%solve(Ahalf)%*%t(Z))  
 }
 
-blsm_colors = function(n) {
-  #' @title Color palette definition
-  #' @description  Color palette definition
-  #' @param n number of colors
-  #' 
-  #' @return Color palette
-  
-  hues = seq(15, 375, length = n + 1)
-  hcl(h = hues, l = 65, c = 100)[1:n]
-}
 
 estimate_latent_positions = function (Y,W,
                                       procrustean = TRUE, 
@@ -40,36 +46,41 @@ estimate_latent_positions = function (Y,W,
                                       adelta=.3, a_exp_prior_a=1, a_exp_prior_b=1,
                                       dynamic_plot = FALSE, dynamic_circles = FALSE,
                                       ...){
-  #' @title Core BLSM simulation
-  #' @description Run a simulation to obtain the positions of the network nodes in the latent space for each sampled iteration.
+  #' @title BLSM simulation
+  #' @description Core function of the BLSM package: run a simulation to obtain the positions of the network nodes 
+  #' in the latent space for each sampled iteration.
+  #' 
+  #' The positions are simulated accordingly to the model assumptions, please refer to \link[BLSM]{BLSM} for further information. 
+  #' The output of the function can be used to retrieve and compare specific iterations, observe their evolution or simply compute
+  #' the average positions (more details in the descriptions and examples below). 
   #' 
   #' @param Y Adjacency matrix of the network
   #' @param W (Optional) Weight matrix of the network
   #' @param k Space dimensionality
   #' @param procrustean Boolean to include/exclude (\code{TRUE/FALSE}) the Procrustean Transform step in the algorithm. Set \code{TRUE} by default.
-  #' @param alpha Starting value of the \code{alpha} parameter
+  #' @param alpha Starting value of the \eqn{\alpha} variable
   #' @param nscan Number of iterations
   #' @param burn_in Burn-in value (starting iterations to be discared)
   #' @param odens Thinning: only 1 iteration every \code{odens} will be sampled and stored in the output
   #' @param zdelta Standard deviation of the Gaussian proposal for latent positions
   #' @param z_norm_prior_mu Mean of the Gaussian prior distribution for latent positions 
   #' @param z_norm_prior_sd Standard deviation of the Gaussian prior distribution for latent positions
-  #' @param adelta The uniform proposal for \code{alpha} is defined on the \eqn{[-adelta,+adelta]} interval
-  #' @param a_exp_prior_a Shape parameter of the Gamma prior distribution for \code{alpha}. As the value is usually set to 1 the prior is an exponential distribution.
-  #' @param a_exp_prior_b Rate parameter of the Gamma prior distribution for \code{alpha}. 
+  #' @param adelta The uniform proposal for \eqn{\alpha} is defined on the \eqn{[-adelta,+adelta]} interval
+  #' @param a_exp_prior_a Shape parameter of the Gamma prior distribution for \eqn{\alpha}. As the value is usually set to 1 the prior is an exponential distribution.
+  #' @param a_exp_prior_b Rate parameter of the Gamma prior distribution for \eqn{\alpha}. 
   #' @param dynamic_plot Boolean to plot dinamically the simulated positions (one update every \code{odens} iterations)
-  #' @param dynamic_circles Boolean to add circles of radius \code{alpha} to the dynamic plots
+  #' @param dynamic_circles Boolean to add circles of radius \eqn{\alpha} to the dynamic plots
   #' @param {\dots} Additional parameters that can be passed to \link[BLSM]{plot_latent_positions}
   #' 
   #' @return Returns a "BLSM object" (\code{blsm_obj}), i.e. a list containing:
   #' \itemize{
-  #' \item \code{Alpha }{\code{alpha} values from the sampled iterations}
+  #' \item \code{Alpha }{\eqn{\alpha} values from the sampled iterations}
   #' \item \code{Likelihood }{Log-likelihood values from the sampled iterations}
   #' \item \code{Iterations }{Latent space coordinates from the sampled iterations. Latent positions are stored in a
   #' 3D array whose dimensions are given by (1: number of nodes, 2: space dimensionality, 3: number of iterations).
   #' In the non-Procrustean framework the latent distances are given instead of the positions: another 3D array is returned, whose dimensions
   #' are given by (1: number of nodes, 2: number of nodes, 3: number of iterations). The command needed in order to get the average values over the iterations for
-  #' either the positions or the distances is \code{rowMeans(blsm_obj$Iterations, dims=2)}.}
+  #' either the positions or the distances is \code{rowMeans(blsm_obj$Iterations, dims=2)} (see example below).}
   #' \item \code{StartingPositions }{Latent space coordinates right after the initialization step. In the non-Procrustean framework starting distances are given instead.}
   #' \item \code{Matrix }{Original matrices of the network (adjacency and weights)}
   #' \item \code{Parameters }{List of parameters specified during the call to \link[BLSM]{estimate_latent_positions}}
@@ -77,11 +88,21 @@ estimate_latent_positions = function (Y,W,
   #' 
   #' @examples 
   #'\dontrun{
-  #'  estimate_latent_positions(example_adjacency_matrix,  
-  #'                            burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
-  #'                          
-  #'  estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, 
-  #'                           nscan = 10^5, dynamic_plot = TRUE)
+  #'  # Procrustean version followed by clustering
+  #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
+  #'                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+  #'  avg_latent_positions = rowMeans(blsm_obj$Iterations, dims=2)                   
+  #'  h_cl = hclust(dist(avg_latent_positions), method="complete")
+  #'  n=3
+  #'  latent_space_clusters = cutree(h_cl, k=n)
+  #'  plot(avg_latent_positions, col=rainbow(n)[latent_space_clusters], pch=20)
+  #'  
+  #'  # Non-Procrustean version                        
+  #'  blsm_obj_2 = estimate_latent_positions(example_adjacency_matrix, procrustean=FALSE,
+  #'                           burn_in = 3*10^4, nscan = 10^5)
+  #'  # Weighted network 
+  #'  blsm_obj_3 = estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, 
+  #'                           burn_in = 10^5, nscan = 2*10^5, dynamic_plot = TRUE)
   #'}
   #' @export
   
@@ -117,8 +138,7 @@ estimate_latent_positions = function (Y,W,
   cc=(Y>0)+0
   D=dst(cc)
   Z=cmdscale(D, k)
-  Z[,1]=Z[,1]-mean(Z[,1])
-  Z[,2]=Z[,2]-mean(Z[,2])
+  Z=t(t(Z)-colMeans(Z))
   
   tmp_opt=c(alpha,c(Z))
   tmp_opt=optim(tmp_opt,mlpY,Y=Y,W=W, method="SANN")$par 
@@ -128,6 +148,7 @@ estimate_latent_positions = function (Y,W,
   alpha=tmp_opt[1]
   
   Z_Proc = matrix(tmp_opt[-1],nrow=n,ncol=k)
+  Z_Proc=t(t(Z_Proc)-colMeans(Z_Proc))
   Z = Z_Proc
   lpz = lpz_dist(Z)
   
@@ -151,8 +172,6 @@ estimate_latent_positions = function (Y,W,
       tmp = Z_up(Y,Z,W,alpha,zdelta, z_norm_prior_mu, z_norm_prior_sd)
       if(any(tmp!=Z)){
         acc_z=acc_z+sum(tmp!=Z)/(2*n*odens)
-        Z[,1] = Z[,1]-mean(Z[,1])
-        Z[,2] = Z[,2]-mean(Z[,2])
         tryCatch({
           Z = proc_crr(tmp,Z_Proc)
         }, error = function(e) {
@@ -234,7 +253,8 @@ estimate_latent_positions = function (Y,W,
           blsm_obj$Likelihood[it_cont] = lik
           cat(ns-burn_in,acc_a,acc_z,alpha,lik,"\n")
           acc_z=acc_a=0
-          blsm_obj$Iterations[,,(ns-burn_in)/odens] = -lpz
+          blsm_obj$Iterations[,,it_cont] = -lpz
+          it_cont = it_cont + 1
         } else {
           if (ns==odens){
             cat("\nBeginning burn-in period...\n\n")
@@ -254,15 +274,32 @@ estimate_latent_positions = function (Y,W,
   return(blsm_obj)
 }
 
+
 plot_traceplots_acf = function (blsm_obj, chosen_node=1,  coordinate=1, chosen_pair=c(1,2)){
   #' @title BLSM traceplots and ACF
-  #' @description Traceplots and autocorrelation functions for the \code{alpha} parameter and a selected node (or pair of nodes in the non-Procrustean framework).
+  #' @description Traceplots and autocorrelation functions for the \eqn{\alpha} variable and a selected node (or pair of nodes in the non-Procrustean framework).
   #' 
   #' @param blsm_obj Blsm object obtained through \link[BLSM]{estimate_latent_positions}
   #' @param chosen_node Specified node for traceplot and autocorrelation function (Procrustean framework)
   #' @param coordinate Specified coordinate dimension from the n-dimensional latent space
   #' @param chosen_pair Specified pair of nodes for traceplot and autocorrelation function (non-Procrustean framework)
   #' 
+  #' @examples 
+  #'\dontrun{
+  #'  # Run the simulation with Procrustean step
+  #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
+  #'                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+  #'  
+  #'  # Plot 
+  #'  plot_traceplots_acf(blsm_obj, chosen_node=3, coordinate=1)
+  #'  
+  #'  # Run the simulation without Procrustean step
+  #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix, procrustean = FALSE, 
+  #'                           burn_in = 3*10^4, nscan = 10^5)
+  #'  
+  #'  # Plot 
+  #'  plot_traceplots_acf(blsm_obj, chosen_pair=c(2,5))
+  #'}
   #' @export
   
   par(mfrow=c(2,2))
@@ -279,6 +316,7 @@ plot_traceplots_acf = function (blsm_obj, chosen_node=1,  coordinate=1, chosen_p
   }
 }
 
+
 plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point_size=5, labels_point_color="yellow", 
                                  labels_text_size=1, labels_text_color="blue", circles_2D = FALSE){
   #' @title Base BLSM plot function
@@ -291,8 +329,18 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
   #' @param labels_point_color Color of the label points
   #' @param labels_text_size Text size in the label points
   #' @param labels_text_color Text color in the label points
-  #' @param circles_2D Plot circles of radius \code{alpha} (see the model's main variables) centered around the label points
+  #' @param circles_2D Plot circles of radius \eqn{\alpha} (see the model's main variables) centered around the label points
   #' 
+  #' @examples 
+  #'\dontrun{
+  #'  # Run the simulation with Procrustean step
+  #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
+  #'                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+  #'  
+  #'  # Plot 
+  #'  plot_latent_positions(blsm_obj, circles_2D = TRUE)
+  #'  
+  #'}
   #' @export
   
   n=dim(blsm_obj$Iterations)[1]

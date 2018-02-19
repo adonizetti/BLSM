@@ -23,8 +23,19 @@ plot_latent_positions(blsm_obj, colors, points_size = 0.1,
 
 \item{labels_text_color}{Text color in the label points}
 
-\item{circles_2D}{Plot circles of radius \code{alpha} (see the model's main variables) centered around the label points}
+\item{circles_2D}{Plot circles of radius \eqn{\alpha} (see the model's main variables) centered around the label points}
 }
 \description{
-Plot latent positions from a Procrustean simulation
+Plot latent positions from a Procrustean simulation.
+}
+\examples{
+\dontrun{
+ # Run the simulation with Procrustean step
+ blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
+                          burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+ 
+ # Plot 
+ plot_latent_positions(blsm_obj, circles_2D = TRUE)
+ 
+}
 }

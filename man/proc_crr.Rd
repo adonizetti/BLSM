@@ -9,7 +9,7 @@ proc_crr(Z, Z0)
 \arguments{
 \item{Z}{set of initial coordinates to be transformed}
 
-\item{Z0}{set of reference coordinates}
+\item{Z0}{set of reference coordinates centered at the origin}
 }
 \value{
 Set of coordinates minimizing the distance between the initial configuration and the reference one
@@ -17,5 +17,18 @@ Set of coordinates minimizing the distance between the initial configuration and
 \description{
 Given a set of starting coordinates, the function returns the Procrustean Transform of the initial points that minimizes 
 the sum of squared positional difference from a set of reference coordinates. The (Euclidean) distances between a candidate 
-configuration and the reference are evaluated by considering the couples of corresponding points.
+configuration and the reference are evaluated by considering the couples of corresponding points. 
+
+The reference configuration must be centered at the origin.
+}
+\examples{
+pos_ref = matrix(runif(20), ncol=2)
+\dontrun{
+pos_ref = t(t(pos_ref)-colMeans(pos_ref))
+pos = pos_ref + matrix(rnorm(20, mean=1, sd=0.1), ncol=2)
+proc_pos = proc_crr(pos, pos_ref)
+plot(pos_ref, col="blue", pch=20, xlim=c(-1,3), ylim=c(-1,3))
+points(pos, col="red", pch=20)
+points(proc_pos, col="purple", pch=20)
+}
 }

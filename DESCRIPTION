@@ -4,7 +4,7 @@ Version: 0.1.0
 Date: 2017-06-11
 Authors@R: person("Alberto", "Donizetti", email = "albe.donizetti@gmail.com", role = c("aut", "cre"))
 Description: TBD
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.3.0)
 Imports: Rcpp (>= 0.12.4), RcppEigen (>= 0.3.2.8.1)
 Suggests: rgl (>= 0.98.1)
 LinkingTo: Rcpp, RcppEigen

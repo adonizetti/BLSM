@@ -2,17 +2,32 @@
 #' @title Bayesian Latent Space Model
 #' @docType package
 #' 
-#' @details R package allowing the computation of a Bayesian Latent Space Model for Complex Networks.
+#' @description R package allowing the computation of a Bayesian Latent Space Model for complex networks. 
 #' 
-#' Given a network characterized by its adjacency \eqn{Y} and weights \eqn{W} matrices, the model assigns a binary random 
-#' variable to each tie: i.e., \eqn{Y_ij} is related to the tie between nodes \eqn{i} and \eqn{j} and its value is 1
+#' Latent Space Models are characterized by the presence of unobservable variables (latent coordinates) that are used to 
+#' compute the likelihood of the observed networks. Their goal is to map the observed network in the latent
+#' space by meeting specific probabilistic requirements, so that the estimated latent coordinates can then be used to 
+#' describe and characterize the original graph.
+#' 
+#' In the BSLM package framework, given a network characterized by its adjacency \eqn{Y} matrix, the model assigns a binary random 
+#' variable to each tie: \eqn{Y_ij} is related to the tie between nodes \eqn{i} and \eqn{j} and its value is 1
 #' if the tie exists, 0 otherwise. 
 #'  
 #' The model assumes the independence of \eqn{Y_ij | x_i,x_j, \alpha}, where \eqn{x_i} and \eqn{x_j} are the coordinates
 #' of the nodes in the multidimensional latent space and \eqn{\alpha} is an additional parameter such that 
-#' \eqn{P(Y_ij = 1) = \alpha - ||x_i -x_j||}.
+#' \eqn{logit(P(Y_ij = 1)) = \alpha - ||x_i -x_j||}.
+#'  
+#' The latent space coordinates are estimated by following a MCMC procedure that is based on the overall likelihood induced by the above equation. 
 #' 
-#' The latent space coordinates are estimated by maximizing the overall likelihood induced by the above equation. 
+#' Due to the simmetry of the distance, the model leads to more intuitive outputs for undirected networks, 
+#' but the functions can also deal with directed graphs.
+#' 
+#' If the network is weighted, i.e. to each tie is associated a positive coefficient, the model's probability equation
+#' becomes \eqn{logit(P(Y_ij = 1)) = \alpha - W_ij||x_i -x_j||}, where \eqn{W_ij} denotes the weight related to link existing between \eqn{x_i} and \eqn{x_j}. 
+#' This means that even non existing links should have a weight, therefore the matrix used in the computation isn't the original weights matrix but
+#' actually a specific "BLSM weights" matrix that contains positive coefficients for all the possible pairs of nodes. 
+#' When dealing with weighted networks, please be careful to pass a "BLSM weights" matrix as input to all the exported functions
+#' (please refer to \link[BLSM]{example_weights_matrix} for more detailed information and a valid example).
 #' 
 #' The output of the model allows the user to inspect the MCMC simulation, create insightful graphical representations or 
 #' apply clustering techniques to better describe the latent space. 
@@ -20,7 +35,12 @@
 #' 
 #' @import Rcpp RcppEigen 
 #' @importFrom Rcpp evalCpp
-#' @useDynLib BLSM
+#' @importFrom grDevices dev.flush dev.hold dev.new graphics.off hcl
+#' @importFrom graphics lines par plot points symbols text
+#' @importFrom stats acf cmdscale optim
+#' 
+#' @useDynLib BLSM, .registration = TRUE
+#' 
 #' @references A. Donizetti, A Latent Space Model Approach for Clustering Complex Network Data, 
 #' Master's Thesis, Politecnico di Milano, (2017).
 #' 

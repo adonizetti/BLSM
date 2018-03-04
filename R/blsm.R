@@ -55,7 +55,7 @@ estimate_latent_positions = function (Y,W,
   #' the average positions (more details in the descriptions and examples below). 
   #' 
   #' @param Y Adjacency matrix of the network
-  #' @param W (Optional) Weight matrix of the network
+  #' @param W (Optional) BLSM Weight matrix of the network
   #' @param k Space dimensionality
   #' @param procrustean Boolean to include/exclude (\code{TRUE/FALSE}) the Procrustean Transform step in the algorithm. Set \code{TRUE} by default.
   #' @param alpha Starting value of the \eqn{\alpha} variable
@@ -70,7 +70,7 @@ estimate_latent_positions = function (Y,W,
   #' @param a_exp_prior_b Rate parameter of the Gamma prior distribution for \eqn{\alpha}. 
   #' @param dynamic_plot Boolean to plot dinamically the simulated positions (one update every \code{odens} iterations)
   #' @param dynamic_circles Boolean to add circles of radius \eqn{\alpha} to the dynamic plots
-  #' @param {\dots} Additional parameters that can be passed to \link[BLSM]{plot_latent_positions}
+  #' @param \dots Additional parameters that can be passed to \link[BLSM]{plot_latent_positions}
   #' 
   #' @return Returns a "BLSM object" (\code{blsm_obj}), i.e. a list containing:
   #' \itemize{
@@ -82,7 +82,7 @@ estimate_latent_positions = function (Y,W,
   #' are given by (1: number of nodes, 2: number of nodes, 3: number of iterations). The command needed in order to get the average values over the iterations for
   #' either the positions or the distances is \code{rowMeans(blsm_obj$Iterations, dims=2)} (see example below).}
   #' \item \code{StartingPositions }{Latent space coordinates right after the initialization step. In the non-Procrustean framework starting distances are given instead.}
-  #' \item \code{Matrix }{Original matrices of the network (adjacency and weights)}
+  #' \item \code{Matrix }{Original matrices of the network (adjacency and BLSM weights)}
   #' \item \code{Parameters }{List of parameters specified during the call to \link[BLSM]{estimate_latent_positions}}
   #' }
   #' 
@@ -94,13 +94,20 @@ estimate_latent_positions = function (Y,W,
   #'                           
   #'  avg_latent_positions = rowMeans(blsm_obj$Iterations, dims=2)                   
   #'  h_cl = hclust(dist(avg_latent_positions), method="complete")
-  #'  n=3
+  #'  n = 3
   #'  latent_space_clusters = cutree(h_cl, k=n)
+  #'  print(latent_space_clusters)
   #'  plot(avg_latent_positions, col=rainbow(n)[latent_space_clusters], pch=20)
   #'  
-  #'  # Non-Procrustean version                        
+  #'  # Non-Procrustean version followed by clustering                    
   #'  blsm_obj_2 = estimate_latent_positions(example_adjacency_matrix, procrustean=FALSE,
   #'                           burn_in = 3*10^4, nscan = 10^5)
+  #'  avg_latent_distances = rowMeans(blsm_obj_2$Iterations, dims=2)
+  #'  h_cl = hclust(as.dist(avg_latent_distances), method="complete")
+  #'  n = 3
+  #'  latent_space_clusters_2 = cutree(h_cl, k=n)
+  #'  print(latent_space_clusters_2)
+  #'                            
   #'  # Weighted network 
   #'  blsm_obj_3 = estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, 
   #'                           burn_in = 10^5, nscan = 2*10^5, dynamic_plot = TRUE)
@@ -193,9 +200,9 @@ estimate_latent_positions = function (Y,W,
         if(ns>burn_in){
           if (create_window_flag){
             if (k==2) {
-              x11(xpos=0,ypos=0)
+              dev.new(xpos=0,ypos=0)
             } else if (k==3) {
-              par3d(windowRect = c(50, 50, 800, 800))
+              rgl::par3d(windowRect = c(50, 50, 800, 800))
             } else {
               message("Error: plot cannot be displayed since space dimensionality is bigger than 3.")
               dynamic_plot=FALSE
@@ -379,9 +386,9 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
       par(mar=c(3,3,1,1))
       par(mgp=c(2,1,0))
       
-      plot3d(blsm_obj$Iterations[,1,],blsm_obj$Iterations[,2,],blsm_obj$Iterations[,3,], size=points_size*10, 
+      rgl::plot3d(blsm_obj$Iterations[,1,],blsm_obj$Iterations[,2,],blsm_obj$Iterations[,3,], size=points_size*10, 
              col=colors, xlab = "", ylab="", zlab="")
-      rgl.viewpoint(theta=30, phi=10, fov=30)
+      rgl::rgl.viewpoint(theta=30, phi=10, fov=30)
       
       if (missing(avg_Z_est)){
         avg_Z_est=rowMeans(blsm_obj$Iterations, dims=2, na.rm = TRUE)
@@ -389,14 +396,14 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
       for(i in 1:(n-1)){ 
         for(j in (i+1):n){
           if (blsm_obj$Matrix$Adjacency[i,j]){
-            lines3d( avg_Z_est[c(i,j),], col="blue", lwd =2)
+            rgl::lines3d( avg_Z_est[c(i,j),], col="blue", lwd =2)
           }
         }
       }
       
-      points3d(avg_Z_est[,1],avg_Z_est[,2],avg_Z_est[,3],xaxt="n",yaxt="n",xlab="",ylab="", col=labels_point_color,size=labels_point_size*10)
+      rgl::points3d(avg_Z_est[,1],avg_Z_est[,2],avg_Z_est[,3],xaxt="n",yaxt="n",xlab="",ylab="", col=labels_point_color,size=labels_point_size*10)
       
-      text3d(avg_Z_est[,1],avg_Z_est[,2],avg_Z_est[,3],labels(blsm_obj$Matrix$Adjacency)[[1]],col=labels_text_color,cex=labels_text_size)
+      rgl::text3d(avg_Z_est[,1],avg_Z_est[,2],avg_Z_est[,3],labels(blsm_obj$Matrix$Adjacency)[[1]],col=labels_text_color,cex=labels_text_size)
     } else {
       message("Error: plot cannot be displayed since space dimensionality is bigger than 3.")
     }

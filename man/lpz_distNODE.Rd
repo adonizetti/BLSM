@@ -10,6 +10,8 @@ lpz_distNODE(Z, node, diag)
 \item{Z}{Latent positions matrix}
 
 \item{node}{Specific node in the network corresponding to the latent coordinate which will be used as reference}
+
+\item{diag}{Diagonal from \code{t(Z)\%*\%Z} matrix, passed to speed up the process.}
 }
 \value{
 Vector containing the negative square root of the Euclidean distances between latent positions

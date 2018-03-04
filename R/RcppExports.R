@@ -10,7 +10,7 @@
 #' @examples dst(example_adjacency_matrix)
 #' @export
 dst <- function(M) {
-    .Call('_BLSM_dst', PACKAGE = 'BLSM', M)
+    .Call(`_BLSM_dst`, M)
 }
 
 #' @title Distance between latent positions
@@ -24,7 +24,7 @@ dst <- function(M) {
 #' lpz_dist(pos)
 #' @export
 lpz_dist <- function(Z) {
-    .Call('_BLSM_lpz_dist', PACKAGE = 'BLSM', Z)
+    .Call(`_BLSM_lpz_dist`, Z)
 }
 
 #' @title Network log-likelihood
@@ -35,11 +35,11 @@ lpz_dist <- function(Z) {
 #' @param lpz Matrix containing the negative square root of the Euclidean distances between latent positions 
 #' (output of \link[BLSM]{lpz_dist})
 #' @param alpha Model variable \eqn{\alpha}
-#' @param W Weights matrix of the observed network
+#' @param W BLSM Weights matrix of the observed network
 #' 
 #' @return Log-likelihood of the observed network
 lpY <- function(Y, lpz, alpha, W) {
-    .Call('_BLSM_lpY', PACKAGE = 'BLSM', Y, lpz, alpha, W)
+    .Call(`_BLSM_lpY`, Y, lpz, alpha, W)
 }
 
 #' @title Network (positive) log-likelihood 
@@ -49,11 +49,11 @@ lpY <- function(Y, lpz, alpha, W) {
 #' 
 #' @param avZ Vector containing the \eqn{\alpha} value and the latent positions 
 #' @param Y Adjacency matrix of the observed network
-#' @param W Weights matrix of the observed network
+#' @param W BLSM Weights matrix of the observed network
 #' 
 #' @return Log-likelihood of the observed network
 mlpY <- function(avZ, Y, W) {
-    .Call('_BLSM_mlpY', PACKAGE = 'BLSM', avZ, Y, W)
+    .Call(`_BLSM_mlpY`, avZ, Y, W)
 }
 
 #' @title lpz_dist optimized for individual updates
@@ -63,9 +63,10 @@ mlpY <- function(avZ, Y, W) {
 #' 
 #' @param Z Latent positions matrix
 #' @param node Specific node in the network corresponding to the latent coordinate which will be used as reference
+#' @param diag Diagonal from \code{t(Z)\%*\%Z} matrix, passed to speed up the process.
 #' @return Vector containing the negative square root of the Euclidean distances between latent positions
 lpz_distNODE <- function(Z, node, diag) {
-    .Call('_BLSM_lpz_distNODE', PACKAGE = 'BLSM', Z, node, diag)
+    .Call(`_BLSM_lpz_distNODE`, Z, node, diag)
 }
 
 #' @title Network log-likelihood for individual updates
@@ -77,11 +78,11 @@ lpz_distNODE <- function(Z, node, diag) {
 #' @param alpha Model variable \eqn{\alpha}
 #' @param node Specific node in the network corresponding to the latent coordinate which will be used as reference
 #' @param diag Diagonal from \code{t(Z)\%*\%Z} matrix, passed to speed up the process.
-#' @param W Weights matrix of the observed network
+#' @param W BLSM Weights matrix of the observed network
 #' 
 #' @return Log-likelihood of the observed network
 lpYNODE <- function(Y, Z, alpha, node, diag, W) {
-    .Call('_BLSM_lpYNODE', PACKAGE = 'BLSM', Y, Z, alpha, node, diag, W)
+    .Call(`_BLSM_lpYNODE`, Y, Z, alpha, node, diag, W)
 }
 
 #' @title Update step for the latent positions
@@ -89,7 +90,7 @@ lpYNODE <- function(Y, Z, alpha, node, diag, W) {
 #'  
 #' @param Y Adjacency matrix of the observed network
 #' @param Z Latent positions matrix
-#' @param W Weights matrix of the observed network
+#' @param W BLSM Weights matrix of the observed network
 #' @param alpha Model variable \eqn{\alpha}
 #' @param zdelta Standard deviation of the Gaussian proposal for latent positions
 #' @param mu_z Mean of the Gaussian prior distribution for latent positions 
@@ -97,15 +98,15 @@ lpYNODE <- function(Y, Z, alpha, node, diag, W) {
 #' 
 #' @return Updated latent positions matrix
 Z_up <- function(Y, Z, W, alpha, zdelta, mu_z, sd_z) {
-    .Call('_BLSM_Z_up', PACKAGE = 'BLSM', Y, Z, W, alpha, zdelta, mu_z, sd_z)
+    .Call(`_BLSM_Z_up`, Y, Z, W, alpha, zdelta, mu_z, sd_z)
 }
 
 #' @title Update step for the \eqn{\alpha} variable
 #' @description Accept/reject the proposal for the \eqn{\alpha} model variable 
 #'  
 #' @param Y Adjacency matrix of the observed network
-#' @param Z Latent positions matrix
-#' @param W Weights matrix of the observed network
+#' @param lpz Matrix containing the negative square root of the Euclidean distances between latent positions 
+#' @param W BLSM Weights matrix of the observed network
 #' @param alpha Model variable \eqn{\alpha}
 #' @param adelta The uniform proposal for \eqn{\alpha} is defined on the \eqn{[-adelta,+adelta]} interval
 #' @param a_a Shape parameter of the Gamma prior distribution for \eqn{\alpha}. The value is usually set to 1, so the prior is actually an exponential distribution.
@@ -113,6 +114,6 @@ Z_up <- function(Y, Z, W, alpha, zdelta, mu_z, sd_z) {
 #' 
 #' @return Updated value of the \eqn{\alpha} variable
 alpha_up <- function(Y, lpz, W, alpha, adelta, a_a, a_b) {
-    .Call('_BLSM_alpha_up', PACKAGE = 'BLSM', Y, lpz, W, alpha, adelta, a_a, a_b)
+    .Call(`_BLSM_alpha_up`, Y, lpz, W, alpha, adelta, a_a, a_b)
 }
 

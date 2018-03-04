@@ -11,7 +11,7 @@ Z_up(Y, Z, W, alpha, zdelta, mu_z, sd_z)
 
 \item{Z}{Latent positions matrix}
 
-\item{W}{Weights matrix of the observed network}
+\item{W}{BLSM Weights matrix of the observed network}
 
 \item{alpha}{Model variable \eqn{\alpha}}
 

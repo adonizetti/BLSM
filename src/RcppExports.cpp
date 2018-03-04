@@ -118,20 +118,3 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-
-static const R_CallMethodDef CallEntries[] = {
-    {"_BLSM_dst", (DL_FUNC) &_BLSM_dst, 1},
-    {"_BLSM_lpz_dist", (DL_FUNC) &_BLSM_lpz_dist, 1},
-    {"_BLSM_lpY", (DL_FUNC) &_BLSM_lpY, 4},
-    {"_BLSM_mlpY", (DL_FUNC) &_BLSM_mlpY, 3},
-    {"_BLSM_lpz_distNODE", (DL_FUNC) &_BLSM_lpz_distNODE, 3},
-    {"_BLSM_lpYNODE", (DL_FUNC) &_BLSM_lpYNODE, 6},
-    {"_BLSM_Z_up", (DL_FUNC) &_BLSM_Z_up, 7},
-    {"_BLSM_alpha_up", (DL_FUNC) &_BLSM_alpha_up, 7},
-    {NULL, NULL, 0}
-};
-
-RcppExport void R_init_BLSM(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
-}

@@ -9,7 +9,9 @@ alpha_up(Y, lpz, W, alpha, adelta, a_a, a_b)
 \arguments{
 \item{Y}{Adjacency matrix of the observed network}
 
-\item{W}{Weights matrix of the observed network}
+\item{lpz}{Matrix containing the negative square root of the Euclidean distances between latent positions}
+
+\item{W}{BLSM Weights matrix of the observed network}
 
 \item{alpha}{Model variable \eqn{\alpha}}
 
@@ -18,8 +20,6 @@ alpha_up(Y, lpz, W, alpha, adelta, a_a, a_b)
 \item{a_a}{Shape parameter of the Gamma prior distribution for \eqn{\alpha}. The value is usually set to 1, so the prior is actually an exponential distribution.}
 
 \item{a_b}{Rate parameter of the Gamma prior distribution for \eqn{\alpha}.}
-
-\item{Z}{Latent positions matrix}
 }
 \value{
 Updated value of the \eqn{\alpha} variable

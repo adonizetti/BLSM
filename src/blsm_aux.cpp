@@ -79,7 +79,7 @@ Eigen::MatrixXd lpz_dist(Eigen::MatrixXd Z){
 //' @param lpz Matrix containing the negative square root of the Euclidean distances between latent positions 
 //' (output of \link[BLSM]{lpz_dist})
 //' @param alpha Model variable \eqn{\alpha}
-//' @param W Weights matrix of the observed network
+//' @param W BLSM Weights matrix of the observed network
 //' 
 //' @return Log-likelihood of the observed network
 // [[Rcpp::export]] 
@@ -108,7 +108,7 @@ double lpY (Eigen::MatrixXd Y, Eigen::MatrixXd lpz, double alpha, Eigen::MatrixX
 //' 
 //' @param avZ Vector containing the \eqn{\alpha} value and the latent positions 
 //' @param Y Adjacency matrix of the observed network
-//' @param W Weights matrix of the observed network
+//' @param W BLSM Weights matrix of the observed network
 //' 
 //' @return Log-likelihood of the observed network
 // [[Rcpp::export]] 
@@ -134,6 +134,7 @@ double mlpY (Eigen::VectorXd avZ, Eigen::MatrixXd Y, Eigen::MatrixXd W){
 //' 
 //' @param Z Latent positions matrix
 //' @param node Specific node in the network corresponding to the latent coordinate which will be used as reference
+//' @param diag Diagonal from \code{t(Z)\%*\%Z} matrix, passed to speed up the process.
 //' @return Vector containing the negative square root of the Euclidean distances between latent positions
 // [[Rcpp::export]] 
 Eigen::VectorXd lpz_distNODE(Eigen::MatrixXd Z, int node, Eigen::VectorXd diag){
@@ -160,7 +161,7 @@ Eigen::VectorXd lpz_distNODE(Eigen::MatrixXd Z, int node, Eigen::VectorXd diag){
 //' @param alpha Model variable \eqn{\alpha}
 //' @param node Specific node in the network corresponding to the latent coordinate which will be used as reference
 //' @param diag Diagonal from \code{t(Z)\%*\%Z} matrix, passed to speed up the process.
-//' @param W Weights matrix of the observed network
+//' @param W BLSM Weights matrix of the observed network
 //' 
 //' @return Log-likelihood of the observed network
 // [[Rcpp::export]] 
@@ -185,7 +186,7 @@ double lpYNODE (Eigen::MatrixXd Y, Eigen::MatrixXd Z, double alpha, int node, Ei
 //'  
 //' @param Y Adjacency matrix of the observed network
 //' @param Z Latent positions matrix
-//' @param W Weights matrix of the observed network
+//' @param W BLSM Weights matrix of the observed network
 //' @param alpha Model variable \eqn{\alpha}
 //' @param zdelta Standard deviation of the Gaussian proposal for latent positions
 //' @param mu_z Mean of the Gaussian prior distribution for latent positions 
@@ -229,8 +230,8 @@ Eigen::MatrixXd Z_up (Eigen::MatrixXd Y, Eigen::MatrixXd Z, Eigen::MatrixXd W, d
 //' @description Accept/reject the proposal for the \eqn{\alpha} model variable 
 //'  
 //' @param Y Adjacency matrix of the observed network
-//' @param Z Latent positions matrix
-//' @param W Weights matrix of the observed network
+//' @param lpz Matrix containing the negative square root of the Euclidean distances between latent positions 
+//' @param W BLSM Weights matrix of the observed network
 //' @param alpha Model variable \eqn{\alpha}
 //' @param adelta The uniform proposal for \eqn{\alpha} is defined on the \eqn{[-adelta,+adelta]} interval
 //' @param a_a Shape parameter of the Gamma prior distribution for \eqn{\alpha}. The value is usually set to 1, so the prior is actually an exponential distribution.

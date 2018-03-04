@@ -17,7 +17,7 @@ lpYNODE(Y, Z, alpha, node, diag, W)
 
 \item{diag}{Diagonal from \code{t(Z)\%*\%Z} matrix, passed to speed up the process.}
 
-\item{W}{Weights matrix of the observed network}
+\item{W}{BLSM Weights matrix of the observed network}
 }
 \value{
 Log-likelihood of the observed network

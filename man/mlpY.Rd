@@ -11,7 +11,7 @@ mlpY(avZ, Y, W)
 
 \item{Y}{Adjacency matrix of the observed network}
 
-\item{W}{Weights matrix of the observed network}
+\item{W}{BLSM Weights matrix of the observed network}
 }
 \value{
 Log-likelihood of the observed network

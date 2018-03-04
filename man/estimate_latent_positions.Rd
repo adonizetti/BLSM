@@ -13,7 +13,7 @@ estimate_latent_positions(Y, W, procrustean = TRUE, k = 2, alpha = 2,
 \arguments{
 \item{Y}{Adjacency matrix of the network}
 
-\item{W}{(Optional) Weight matrix of the network}
+\item{W}{(Optional) BLSM Weight matrix of the network}
 
 \item{procrustean}{Boolean to include/exclude (\code{TRUE/FALSE}) the Procrustean Transform step in the algorithm. Set \code{TRUE} by default.}
 
@@ -43,7 +43,7 @@ estimate_latent_positions(Y, W, procrustean = TRUE, k = 2, alpha = 2,
 
 \item{dynamic_circles}{Boolean to add circles of radius \eqn{\alpha} to the dynamic plots}
 
-\item{{\dots}}{Additional parameters that can be passed to \link[BLSM]{plot_latent_positions}}
+\item{\dots}{Additional parameters that can be passed to \link[BLSM]{plot_latent_positions}}
 }
 \value{
 Returns a "BLSM object" (\code{blsm_obj}), i.e. a list containing:
@@ -56,7 +56,7 @@ In the non-Procrustean framework the latent distances are given instead of the p
 are given by (1: number of nodes, 2: number of nodes, 3: number of iterations). The command needed in order to get the average values over the iterations for
 either the positions or the distances is \code{rowMeans(blsm_obj$Iterations, dims=2)} (see example below).}
 \item \code{StartingPositions }{Latent space coordinates right after the initialization step. In the non-Procrustean framework starting distances are given instead.}
-\item \code{Matrix }{Original matrices of the network (adjacency and weights)}
+\item \code{Matrix }{Original matrices of the network (adjacency and BLSM weights)}
 \item \code{Parameters }{List of parameters specified during the call to \link[BLSM]{estimate_latent_positions}}
 }
 }
@@ -73,15 +73,23 @@ the average positions (more details in the descriptions and examples below).
  # Procrustean version followed by clustering
  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
+                          
  avg_latent_positions = rowMeans(blsm_obj$Iterations, dims=2)                   
  h_cl = hclust(dist(avg_latent_positions), method="complete")
- n=3
+ n = 3
  latent_space_clusters = cutree(h_cl, k=n)
+ print(latent_space_clusters)
  plot(avg_latent_positions, col=rainbow(n)[latent_space_clusters], pch=20)
  
- # Non-Procrustean version                        
+ # Non-Procrustean version followed by clustering                    
  blsm_obj_2 = estimate_latent_positions(example_adjacency_matrix, procrustean=FALSE,
                           burn_in = 3*10^4, nscan = 10^5)
+ avg_latent_distances = rowMeans(blsm_obj_2$Iterations, dims=2)
+ h_cl = hclust(as.dist(avg_latent_distances), method="complete")
+ n = 3
+ latent_space_clusters_2 = cutree(h_cl, k=n)
+ print(latent_space_clusters_2)
+                           
  # Weighted network 
  blsm_obj_3 = estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, 
                           burn_in = 10^5, nscan = 2*10^5, dynamic_plot = TRUE)

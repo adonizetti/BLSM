@@ -15,7 +15,7 @@ Description: R package allowing the computation of a Bayesian latent space
     The package allows the user to inspect the MCMC simulation, 
     create insightful graphical representations or apply clustering techniques. 
 Depends: R (>= 3.3.0)
-Imports: Rcpp (>= 0.12.4), RcppEigen (>= 0.3.2.8.1)
+Imports: Rcpp (>= 0.12.4)
 Suggests: rgl (>= 0.98.1)
 LinkingTo: Rcpp, RcppEigen
 License: MIT + file LICENSE

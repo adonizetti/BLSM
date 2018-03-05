@@ -3,14 +3,12 @@
 \docType{data}
 \name{example_adjacency_matrix}
 \alias{example_adjacency_matrix}
-\title{Example Adjacency Matrix
-Adjacency matrix of a 10 nodes random network for testing purposes}
+\title{Example Adjacency Matrix}
 \format{A binary adjacency matrix representing links between nodes.}
 \usage{
 example_adjacency_matrix
 }
 \description{
-Example Adjacency Matrix
 Adjacency matrix of a 10 nodes random network for testing purposes
 }
 \keyword{datasets}

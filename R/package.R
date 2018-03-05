@@ -33,7 +33,7 @@
 #' apply clustering techniques to better describe the latent space. 
 #' See \link[BLSM]{estimate_latent_positions} or \link[BLSM]{plot_latent_positions} for further information.
 #' 
-#' @import Rcpp RcppEigen 
+#' @import Rcpp 
 #' @importFrom Rcpp evalCpp
 #' @importFrom grDevices dev.flush dev.hold dev.new graphics.off hcl
 #' @importFrom graphics lines par plot points symbols text

@@ -1,4 +1,5 @@
 #' Example Adjacency Matrix
+#' 
 #' Adjacency matrix of a 10 nodes random network for testing purposes
 #' 
 #' @name example_adjacency_matrix

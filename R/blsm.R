@@ -200,7 +200,7 @@ estimate_latent_positions = function (Y,W,
         if(ns>burn_in){
           if (create_window_flag){
             if (k==2) {
-              dev.new(xpos=0,ypos=0)
+              dev.new(noRStudioGD = TRUE)
             } else if (k==3) {
               rgl::par3d(windowRect = c(50, 50, 800, 800))
             } else {

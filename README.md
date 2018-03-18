@@ -1,2 +1,2 @@
 # BLSM
-Bayesian Latent Space Model R package
+BLSM R package

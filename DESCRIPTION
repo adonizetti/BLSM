@@ -1,6 +1,6 @@
 Package: BLSM
 Title: Bayesian Latent Space Model
-Version: 1.0.0
+Version: 0.1.0
 Date: 2018-03-04
 Authors@R: c(
 	person("Alberto", "Donizetti", email = "albe.donizetti@gmail.com", role = c("aut", "cre")),
@@ -18,6 +18,6 @@ Depends: R (>= 3.3.0)
 Imports: Rcpp (>= 0.12.4)
 Suggests: rgl (>= 0.98.1)
 LinkingTo: Rcpp, RcppEigen
-License: MIT + file LICENSE
+License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 6.0.1

@@ -41,10 +41,11 @@
 #' 
 #' @useDynLib BLSM, .registration = TRUE
 #' 
-#' @references A. Donizetti, A Latent Space Model Approach for Clustering Complex Network Data, 
-#' Master's Thesis, Politecnico di Milano, (2017).
-#' 
-#' P. D. Hoff, A. E. Raftery, M. S. Handcock, Latent Space Approaches to Social Network Analysis, 
+#' @references P. D. Hoff, A. E. Raftery, M. S. Handcock, Latent Space Approaches to Social Network Analysis, 
 #' Journal of the American Statistical Association, Vol. 97, No. 460, (2002), pp. 1090-1098.
+#' 
+#' A. Donizetti, A Latent Space Model Approach for Clustering Complex Network Data, 
+#' Master's Thesis, Politecnico di Milano, (2017).
+#'  
 
 NULL

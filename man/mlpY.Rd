@@ -18,6 +18,6 @@ Log-likelihood of the observed network
 }
 \description{
 Compute the (positive) log-likelihood of the whole observed network based on the
-latent positions estimates and the model assumptions. The inputs are slighlty different from those of \link[BLSM]{lpY},
+latent positions estimates and the model assumptions. The inputs are slightly different from those of \link[BLSM]{lpY},
 so the function basically applies some preprocessing before calling \link[BLSM]{lpY} and returning its value with the opposite sign.
 }

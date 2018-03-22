@@ -8,7 +8,7 @@ plot_traceplots_acf(blsm_obj, chosen_node = 1, coordinate = 1,
   chosen_pair = c(1, 2))
 }
 \arguments{
-\item{blsm_obj}{Blsm object obtained through \link[BLSM]{estimate_latent_positions}}
+\item{blsm_obj}{BLSM object obtained through \link[BLSM]{estimate_latent_positions}}
 
 \item{chosen_node}{Specified node for traceplot and autocorrelation function (Procrustean framework)}
 

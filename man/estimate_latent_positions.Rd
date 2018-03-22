@@ -23,7 +23,7 @@ estimate_latent_positions(Y, W, procrustean = TRUE, k = 2, alpha = 2,
 
 \item{nscan}{Number of iterations}
 
-\item{burn_in}{Burn-in value (starting iterations to be discared)}
+\item{burn_in}{Burn-in value (starting iterations to be discarded)}
 
 \item{odens}{Thinning: only 1 iteration every \code{odens} will be sampled and stored in the output}
 

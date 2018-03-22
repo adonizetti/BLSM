@@ -23,7 +23,7 @@ of the nodes in the multidimensional latent space and \eqn{\alpha} is an additio
  
 The latent space coordinates are estimated by following a MCMC procedure that is based on the overall likelihood induced by the above equation. 
 
-Due to the simmetry of the distance, the model leads to more intuitive outputs for undirected networks, 
+Due to the symmetry of the distance, the model leads to more intuitive outputs for undirected networks, 
 but the functions can also deal with directed graphs.
 
 If the network is weighted, i.e. to each tie is associated a positive coefficient, the model's probability equation

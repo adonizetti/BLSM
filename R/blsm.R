@@ -60,7 +60,7 @@ estimate_latent_positions = function (Y,W,
   #' @param procrustean Boolean to include/exclude (\code{TRUE/FALSE}) the Procrustean Transform step in the algorithm. Set \code{TRUE} by default.
   #' @param alpha Starting value of the \eqn{\alpha} variable
   #' @param nscan Number of iterations
-  #' @param burn_in Burn-in value (starting iterations to be discared)
+  #' @param burn_in Burn-in value (starting iterations to be discarded)
   #' @param odens Thinning: only 1 iteration every \code{odens} will be sampled and stored in the output
   #' @param zdelta Standard deviation of the Gaussian proposal for latent positions
   #' @param z_norm_prior_mu Mean of the Gaussian prior distribution for latent positions 
@@ -287,7 +287,7 @@ plot_traceplots_acf = function (blsm_obj, chosen_node=1,  coordinate=1, chosen_p
   #' @title BLSM traceplots and ACF
   #' @description Traceplots and autocorrelation functions for the \eqn{\alpha} variable and a selected node (or pair of nodes in the non-Procrustean framework).
   #' 
-  #' @param blsm_obj Blsm object obtained through \link[BLSM]{estimate_latent_positions}
+  #' @param blsm_obj BLSM object obtained through \link[BLSM]{estimate_latent_positions}
   #' @param chosen_node Specified node for traceplot and autocorrelation function (Procrustean framework)
   #' @param coordinate Specified coordinate dimension from the n-dimensional latent space
   #' @param chosen_pair Specified pair of nodes for traceplot and autocorrelation function (non-Procrustean framework)

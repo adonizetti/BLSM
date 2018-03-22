@@ -68,7 +68,7 @@ estimate_latent_positions = function (Y,W,
   #' @param adelta The uniform proposal for \eqn{\alpha} is defined on the \eqn{[-adelta,+adelta]} interval
   #' @param a_exp_prior_a Shape parameter of the Gamma prior distribution for \eqn{\alpha}. As the value is usually set to 1 the prior is an exponential distribution.
   #' @param a_exp_prior_b Rate parameter of the Gamma prior distribution for \eqn{\alpha}. 
-  #' @param dynamic_plot Boolean to plot dinamically the simulated positions (one update every \code{odens} iterations)
+  #' @param dynamic_plot Boolean to plot dynamically the simulated positions (one update every \code{odens} iterations)
   #' @param dynamic_circles Boolean to add circles of radius \eqn{\alpha} to the dynamic plots
   #' @param \dots Additional parameters that can be passed to \link[BLSM]{plot_latent_positions}
   #' 

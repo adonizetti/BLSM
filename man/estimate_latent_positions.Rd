@@ -39,7 +39,7 @@ estimate_latent_positions(Y, W, procrustean = TRUE, k = 2, alpha = 2,
 
 \item{a_exp_prior_b}{Rate parameter of the Gamma prior distribution for \eqn{\alpha}.}
 
-\item{dynamic_plot}{Boolean to plot dinamically the simulated positions (one update every \code{odens} iterations)}
+\item{dynamic_plot}{Boolean to plot dynamically the simulated positions (one update every \code{odens} iterations)}
 
 \item{dynamic_circles}{Boolean to add circles of radius \eqn{\alpha} to the dynamic plots}
 

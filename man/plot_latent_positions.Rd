@@ -9,7 +9,7 @@ plot_latent_positions(blsm_obj, colors, points_size = 0.1,
   labels_text_size = 1, labels_text_color = "blue", circles_2D = FALSE)
 }
 \arguments{
-\item{blsm_obj}{Blsm object obtained through \link[BLSM]{estimate_latent_positions}}
+\item{blsm_obj}{BLSM object obtained through \link[BLSM]{estimate_latent_positions}}
 
 \item{colors}{(Optional) Colors of the simulated coordinate points in the latent space. Internal default colors are used if the argument is missing.}
 

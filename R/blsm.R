@@ -330,7 +330,7 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
   #' @title Base BLSM plot function
   #' @description Plot latent positions from a Procrustean simulation.
   #' 
-  #' @param blsm_obj Blsm object obtained through \link[BLSM]{estimate_latent_positions}
+  #' @param blsm_obj BLSM object obtained through \link[BLSM]{estimate_latent_positions}
   #' @param colors (Optional) Colors of the simulated coordinate points in the latent space. Internal default colors are used if the argument is missing. 
   #' @param points_size Size of the coordinate points
   #' @param labels_point_size Size of the label points

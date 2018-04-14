@@ -15,3 +15,4 @@ This is a new release, so there are no reverse dependencies.
 
 ---
 
+Resubmitting due to missing angle brackets for URLs in the description. 

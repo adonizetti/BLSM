@@ -15,8 +15,8 @@ Description: R package allowing the computation of a Bayesian latent space
     The package is mainly based on the model by Hoff, Raftery and Handcock (JASA, 2002)
     and contains some extra features (e.g., removal of the Procrustean step, weights 
     implemented as coefficients of the latent distances, 3D plots). 
-    The original code related to the above model was retrieved from 
-    https://www.stat.washington.edu/people/pdhoff/Code/hoff_raftery_handcock_2002_jasa/.
+    The original code related to the above model was retrieved from
+    <https://www.stat.washington.edu/people/pdhoff/Code/hoff_raftery_handcock_2002_jasa/>.
     Users can inspect the MCMC simulation, create and customize insightful 
     graphical representations or apply clustering techniques. 
 Depends: R (>= 3.3.0)

@@ -1,7 +1,7 @@
 Package: BLSM
 Title: Bayesian Latent Space Model
 Version: 0.1.0
-Date: 2018-03-23
+Date: 2018-04-14
 Authors@R: c(
 	person("Alberto", "Donizetti", email = "albe.donizetti@gmail.com", role = c("aut", "cre")),
 	person("Francesca", "Ieva", email = "francesca.ieva@polimi.it", role = "ctb"))
@@ -12,8 +12,13 @@ Description: R package allowing the computation of a Bayesian latent space
     The overall likelihood of the graph depends on a fundamental probability 
     equation, which is defined so that ties are more likely to exist 
     between nodes whose latent space coordinates are close. 
-    The package allows the user to inspect the MCMC simulation, 
-    create insightful graphical representations or apply clustering techniques. 
+    The package is mainly based on the model by Hoff, Raftery and Handcock (JASA, 2002)
+    and contains some extra features (e.g., removal of the Procrustean step, weights 
+    implemented as coefficients of the latent distances, 3D plots). 
+    The original code related to the above model was retrieved from 
+    https://www.stat.washington.edu/people/pdhoff/Code/hoff_raftery_handcock_2002_jasa/.
+    Users can inspect the MCMC simulation, create and customize insightful 
+    graphical representations or apply clustering techniques. 
 Depends: R (>= 3.3.0)
 Imports: Rcpp (>= 0.12.4)
 Suggests: rgl (>= 0.98.1)

@@ -69,6 +69,10 @@ The output of the function can be used to retrieve and compare specific iteratio
 the average positions (more details in the descriptions and examples below).
 }
 \examples{
+\dontshow{
+blsm_obj_test_1 = estimate_latent_positions(example_adjacency_matrix, burn_in = 10^3, nscan = 3*10^3, odens=100)
+blsm_obj_test_2 = estimate_latent_positions(example_adjacency_matrix, procrustean=FALSE, burn_in = 10^3, nscan = 3*10^3, odens=100)
+}
 \dontrun{
  # Procrustean version followed by clustering
  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  

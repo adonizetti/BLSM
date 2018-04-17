@@ -20,14 +20,9 @@ plot_traceplots_acf(blsm_obj, chosen_node = 1, coordinate = 1,
 Traceplots and autocorrelation functions for the \eqn{\alpha} variable and a selected node (or pair of nodes in the non-Procrustean framework).
 }
 \examples{
+plot_traceplots_acf(example_blsm_obj, chosen_node=3, coordinate=1)
+
 \dontrun{
- # Run the simulation with Procrustean step
- blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
-                          burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
- 
- # Plot 
- plot_traceplots_acf(blsm_obj, chosen_node=3, coordinate=1)
- 
  # Run the simulation without Procrustean step
  blsm_obj = estimate_latent_positions(example_adjacency_matrix, procrustean = FALSE, 
                           burn_in = 3*10^4, nscan = 10^5)

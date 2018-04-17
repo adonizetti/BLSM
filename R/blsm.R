@@ -16,15 +16,19 @@ proc_crr=function(Z,Z0){
   #' @param Z0 set of reference coordinates centered at the origin
   #' 
   #' @return Set of coordinates minimizing the distance between the initial configuration and the reference one
-  #' @examples pos_ref = matrix(runif(20), ncol=2)
-  #' \dontrun{
+  #' @examples 
+  #' # Create configuration and center it at the origin
+  #' pos_ref = matrix(runif(20), ncol=2)
   #' pos_ref = t(t(pos_ref)-colMeans(pos_ref))
+  #' 
+  #' # Create a new configuration by adding a perturbation to the previous one
   #' pos = pos_ref + matrix(rnorm(20, mean=1, sd=0.1), ncol=2)
+  #' 
+  #' # Compute the Procrustean Transform and inspect the results
   #' proc_pos = proc_crr(pos, pos_ref)
   #' plot(pos_ref, col="blue", pch=20, xlim=c(-1,3), ylim=c(-1,3))
   #' points(pos, col="red", pch=20)
   #' points(proc_pos, col="purple", pch=20)
-  #' }
   #' @export
   
   Z=t(t(Z)-colMeans(Z))
@@ -87,7 +91,11 @@ estimate_latent_positions = function (Y,W,
   #' }
   #' 
   #' @examples 
-  #'\dontrun{
+  #' \dontshow{
+  #' blsm_obj_test_1 = estimate_latent_positions(example_adjacency_matrix, burn_in = 10^3, nscan = 3*10^3, odens=100)
+  #' blsm_obj_test_2 = estimate_latent_positions(example_adjacency_matrix, procrustean=FALSE, burn_in = 10^3, nscan = 3*10^3, odens=100)
+  #' }
+  #' \dontrun{
   #'  # Procrustean version followed by clustering
   #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
   #'                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
@@ -111,7 +119,7 @@ estimate_latent_positions = function (Y,W,
   #'  # Weighted network 
   #'  blsm_obj_3 = estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, 
   #'                           burn_in = 10^5, nscan = 2*10^5, dynamic_plot = TRUE)
-  #'}
+  #' }
   #' @export
   
   if (missing(W)) {
@@ -293,14 +301,9 @@ plot_traceplots_acf = function (blsm_obj, chosen_node=1,  coordinate=1, chosen_p
   #' @param chosen_pair Specified pair of nodes for traceplot and autocorrelation function (non-Procrustean framework)
   #' 
   #' @examples 
+  #' plot_traceplots_acf(example_blsm_obj, chosen_node=3, coordinate=1)
+  #' 
   #'\dontrun{
-  #'  # Run the simulation with Procrustean step
-  #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
-  #'                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
-  #'  
-  #'  # Plot 
-  #'  plot_traceplots_acf(blsm_obj, chosen_node=3, coordinate=1)
-  #'  
   #'  # Run the simulation without Procrustean step
   #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix, procrustean = FALSE, 
   #'                           burn_in = 3*10^4, nscan = 10^5)
@@ -340,15 +343,9 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
   #' @param circles_2D Plot circles of radius \eqn{\alpha} (see the model's main variables) centered around the label points
   #' 
   #' @examples 
-  #'\dontrun{
-  #'  # Run the simulation with Procrustean step
-  #'  blsm_obj = estimate_latent_positions(example_adjacency_matrix,  
-  #'                           burn_in = 3*10^4, nscan = 10^5, dynamic_plot = TRUE)
-  #'  
-  #'  # Plot 
-  #'  plot_latent_positions(blsm_obj, circles_2D = TRUE)
-  #'  
-  #'}
+  #' plot_latent_positions(example_blsm_obj, labels_point_color = "black", labels_text_color = "black")
+  #' 
+  #' plot_latent_positions(example_blsm_obj, circles_2D = TRUE)
   #' @export
   
   n=dim(blsm_obj$Iterations)[1]

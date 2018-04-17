@@ -15,4 +15,6 @@ This is a new release, so there are no reverse dependencies.
 
 ---
 
-Resubmitting due to missing angle brackets for URLs in the description. 
+Resubmitting due to:
+* missing DOI in the description - added
+* too many dontrun examples. It's not possible for the main functions to give meaningful outputs if the simulations are too short, so I've added at least one dontshow example for testing purposes on a few iterations. I've also removed all the "\dontrun" from examples which should be quickly executable.

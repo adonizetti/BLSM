@@ -12,7 +12,7 @@ The latent space coordinates are estimated by following a MCMC procedure that is
 
 To run a simulation and store the information in a _blsm\_obj_, please use the following function:
 ```
-blsm_obj_1 = estimate_latent_positions(Y = example_adjacency_matrix, burn_in = 3*10^4, nscan = 10^5)
+blsm_obj_1 = estimate_latent_positions(example_adjacency_matrix, burn_in=3*10^4, nscan=10^5)
 ```
 
 If the network is weighted, i.e. to each tie is associated a positive coefficient, the model's probability equation becomes _logit(P(Y<sub>ij</sub> = 1)) = &alpha; - W<sub>ij</sub>||x<sub>i</sub> -x<sub>j</sub>||_, where _W<sub>ij</sub>_ denotes the weight related to link existing between  _x<sub>i</sub>_ and  _x<sub>j</sub>_. 
@@ -22,15 +22,15 @@ When dealing with weighted networks, please be careful to pass a "BLSM weights" 
 
 To run a simulation with a weighted network, please use the following function:
 ```
-blsm_obj_2 = estimate_latent_positions(Y = example_adjacency_matrix, W = example_weights_matrix, burn_in = 3*10^4, nscan = 10^5)
+blsm_obj_2 = estimate_latent_positions(example_adjacency_matrix, example_weights_matrix, burn_in=3*10^4, nscan=10^5)
 ```
 
 The output of the model allows the user to inspect the MCMC simulation, create insightful graphical representations or 
 apply clustering techniques to better describe the latent space. 
 
-For instance, the following function plots all the MCMC iterations related to an example simulation available in the package ( _example\_blsm\_obj_ ). 
+For instance, the following function plots all the MCMC iterations related to an example simulation available in the package (_example\_blsm\_obj_). 
 ```
-plot_latent_positions(blsm_obj = example_blsm_obj, labels_point_color = "black", labels_text_color = "black")
+plot_latent_positions(example_blsm_obj, labels_point_color="black", labels_text_color="black")
 ```
 
 Please refer to the package help for more detailed information. 

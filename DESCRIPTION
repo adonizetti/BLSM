@@ -1,7 +1,7 @@
 Package: BLSM
 Title: Bayesian Latent Space Model
 Version: 0.1.0
-Date: 2018-04-24
+Date: 2018-04-25
 Authors@R: c(
 	person("Alberto", "Donizetti", email = "albe.donizetti@gmail.com", role = c("aut", "cre")),
 	person("Francesca", "Ieva", email = "francesca.ieva@polimi.it", role = "ctb"))

@@ -16,7 +16,7 @@ This is a new release, so there are no reverse dependencies.
 
 ## Resubmission
 
-* Rephrased starting sentence
+* Rephrased starting sentence in the description
 * Added missing DOI in the description
 * Added new examples and improved the existing ones. It's not possible for the main functions to give meaningful outputs if the simulations are too short, so I've introduced a couple of dontshow examples for testing purposes on a few iterations. I've also removed all the dontrun statements from examples which can be quickly executed. 
 

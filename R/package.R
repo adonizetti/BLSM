@@ -26,8 +26,8 @@
 #' becomes \eqn{logit(P(Y_ij = 1)) = \alpha - W_ij||x_i -x_j||}, where \eqn{W_ij} denotes the weight related to link existing between \eqn{x_i} and \eqn{x_j}. 
 #' This means that even non existing links should have a weight, therefore the matrix used in the computation isn't the original weights matrix but
 #' actually a specific "BLSM weights" matrix that contains positive coefficients for all the possible pairs of nodes. 
-#' When dealing with weighted networks, please be careful to pass a "BLSM weights" matrix as input to all the exported functions
-#' (please refer to \link[BLSM]{example_weights_matrix} for more detailed information and a valid example).
+#' When dealing with weighted networks, please be careful to pass a "BLSM weights" matrix as input 
+#' #' (please refer to \link[BLSM]{example_weights_matrix} for more detailed information and a valid example).
 #' 
 #' The output of the model allows the user to inspect the MCMC simulation, create insightful graphical representations or 
 #' apply clustering techniques to better describe the latent space. 

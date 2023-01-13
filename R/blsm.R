@@ -385,7 +385,7 @@ plot_latent_positions = function(blsm_obj, colors, points_size=0.1, labels_point
       
       rgl::plot3d(blsm_obj$Iterations[,1,],blsm_obj$Iterations[,2,],blsm_obj$Iterations[,3,], size=points_size*10, 
              col=colors, xlab = "", ylab="", zlab="")
-      rgl::rgl.viewpoint(theta=30, phi=10, fov=30)
+      rgl::view3d(theta=30, phi=10, fov=30)
       
       if (missing(avg_Z_est)){
         avg_Z_est=rowMeans(blsm_obj$Iterations, dims=2, na.rm = TRUE)
